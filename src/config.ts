@@ -22,21 +22,17 @@ function writeConfig(config: ConfigJson){
     const configString = JSON.stringify(config);
     writeFileSync(getConfigPath(), configString);
 }
+
 function parseConfigObject(configString: string){
-    const stringObject = JSON.parse(configString, function(key, value){
-        if (key === "db_url"){
-            this.dbUrl = value;
-            return undefined;
-        }
-        if (key === "current_user_name"){
-            this.currentUserName = value;
-            return undefined;
-        }
-        return value;
-    });
-    return stringObject;
+    const stringObject = JSON.parse(configString);
+    const finalObject = {
+        dbUrl: stringObject.db_url ?? stringObject.dbUrl,
+        currentUserName: stringObject.current_user_name ?? stringObject.currentUserName,
+    };
+    return finalObject;
 }
-export function readConfigFile(): ConfigJson{
+
+export function readConfig(): ConfigJson{
     const configFilePath = getConfigPath();
     const configString = readFileSync(configFilePath, "utf-8");
     const rawConfigObject = parseConfigObject(configString);
@@ -50,7 +46,7 @@ export function readConfigFile(): ConfigJson{
 
 export function setUser(username: string){
     try{
-        let currentConfig = readConfigFile();
+        let currentConfig = readConfig();
         currentConfig.currentUserName = username;
         writeConfig(currentConfig);
     }catch(error){

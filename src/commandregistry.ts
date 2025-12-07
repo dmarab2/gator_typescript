@@ -5,13 +5,13 @@ export function registerCommand(registry: CommandRegistry, cmdName: string, hand
     registry[cmdName] = handler;
 }
 
-export function runCommand(registry: CommandRegistry, cmdName: string, ...args: string[]){
+export async function runCommand(registry: CommandRegistry, cmdName: string, ...args: string[]){
     if (!(cmdName in registry)){
         throw new Error("This is not a valid command!");
     }
     try{
         const commandFunction = registry[cmdName];
-        commandFunction(cmdName, ...args);
+        await commandFunction(cmdName, ...args);
     }catch(error){
         console.log("Caught an error...");
         throw error;
