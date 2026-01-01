@@ -6,7 +6,7 @@ import { create } from "domain";
 
 export async function registerHandler(cmdName: string, ...args: string[]): Promise<void>{
     if(args.length === 0){
-        throw new Error("You need a login name!")
+        throw new Error("You need a username!")
     }
     const username = args[0];
     const usernameQuery = await getUser(username);
